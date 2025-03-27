@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOAN APPLICATION</title>
+    <style>
+
+    .P{
+        text-align: center;
+        color: white;
+        font-size: 50px;
+    font-weight: bold;
+    width: 60%;
+    margin: auto;
+    background-color: green;
+    }
+    .container{
+        text-align: center;
+        width: 40%;
+        margin: auto;
+        color:green;
+        background-color: yellow;
+        font-size: 20PX;
+        font-weight: bold;
+    }
+    .body{
+        background-image: url(maize.jpg);
+    }
+    </style>
+</head>
+<body class="body">
+   <div class="P"> <p >FERTILIZER APPLICATION FORM</p></div>
+    <div class="container">
+    <form action="loan" method="post">
+        <label for="Name">Name</label><br>
+        <input type="text" id="Name" name="Name" placeholder="User-name" style="height: 40px; width: 200px;"><br>
+        <label for="phone number">Phone Number</label><br>
+        <input type="number" id="phone number" name="phone number" placeholder="phone-number" style="height: 40px; width: 200px;"><br>
+        <label for="id">Identification Card</label><br>
+        <input type="number" id="Identification Card" name="Identification Card" placeholder="ID-number" style="height: 40px; width: 200px;"><br>
+        <label for="County">County</label><br>
+        <select name="County" id="County" placeholder="select" style="height: 40px; width: 200px;">
+
+<option value="option1">Uasin Gishu</option>
+<option value="option2">Nandi</option>
+<option value="option3">Kitale</option>
+<option value="option4">Elgeyo Marakwet</option>
+<option value="option5">Nakuru</option>
+<option value="option6">Turkana</option>
+<option value="option7">Pokot</option>
+<option value="option8">Kericho</option>
+<option value="option9">Bomet</option>
+<option value="option10">Baringo</option>
+<option value="option11">Narok</option>
+        </select><br><br>
+        
+<button type="submit" style="color: white; background-color: blue; height: 30px; width: 100px;border-radius: 4px;">Apply Now</button>    <button type="submit" style="color: white; background-color: red; height: 30px; width: 100px;border-radius: 4px;">Cancel</button></div>
+    </form>
+</body>
+</html>
