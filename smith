@@ -1,0 +1,832 @@
+<!-- index.html - Main App File -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Fertilizer Application Management System">
+    <title>Smith - Fertilizer App</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+
+        .app-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .app-header h1 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .app-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            color: #9ca3af;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 5px;
+        }
+
+        .nav-item span {
+            display: block;
+            font-size: 12px;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.3s;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4b5563;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-delivered {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-completed {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        /* Application List */
+        .application-item {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .application-item h4 {
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .application-item p {
+            font-size: 14px;
+            color: #6b7280;
+            margin: 5px 0;
+        }
+
+        /* Profile Info */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9ca3af;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Login/Register Toggle */
+        .auth-toggle {
+            text-align: center;
+            margin-top: 15px;
+            color: #6b7280;
+        }
+
+        .auth-toggle a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="app-header">
+            <h1>🌾 Smith</h1>
+            <p id="headerSubtitle">Fertilizer Management System</p>
+        </div>
+
+        <!-- Login Page -->
+        <div id="loginPage" class="page active">
+            <div class="card">
+                <div class="card-header">Login</div>
+                <div id="loginAlert" class="alert alert-error hidden"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" required value="jane.kamau@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" required value="password123">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <div class="auth-toggle">
+                    Don't have an account? <a href="#" onclick="showPage('register'); return false;">Register</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Page -->
+        <div id="registerPage" class="page">
+            <div class="card">
+                <div class="card-header">Register</div>
+                <div id="registerAlert" class="alert alert-success hidden"></div>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="regName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="regEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="regPhone">
+                    </div>
+                    <div class="form-group">
+                        <label>Farm Size (acres)</label>
+                        <input type="number" step="0.01" id="regFarmSize">
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="regLocation">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="regPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" id="regConfirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+                <div class="auth-toggle">
+                    Already have an account? <a href="#" onclick="showPage('login'); return false;">Login</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home/Dashboard Page -->
+        <div id="homePage" class="page">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalApplications">4</div>
+                    <div class="stat-label">Total Applications</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="pendingApplications">1</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Recent Applications</div>
+                <div id="recentApplications"></div>
+            </div>
+        </div>
+
+        <!-- Applications Page -->
+        <div id="applicationsPage" class="page">
+            <div class="card">
+                <div class="card-header">All Applications</div>
+                <div id="allApplications"></div>
+            </div>
+        </div>
+
+        <!-- New Application Page -->
+        <div id="newApplicationPage" class="page">
+            <div class="card">
+                <div class="card-header">New Application</div>
+                <div id="newAppAlert" class="alert alert-success hidden"></div>
+                <form id="newApplicationForm">
+                    <div class="form-group">
+                        <label>Fertilizer Type</label>
+                        <select id="fertilizerType" required>
+                            <option value="">Select Type</option>
+                            <option value="NPK">NPK</option>
+                            <option value="Urea">Urea</option>
+                            <option value="DAP">DAP</option>
+                            <option value="Organic">Organic</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity (kg)</label>
+                        <input type="number" step="0.01" id="quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="notes" rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Application</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profilePage" class="page">
+            <div class="card">
+                <div class="card-header">Profile Information</div>
+                <div id="profileInfo"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Update Profile</div>
+                <div id="profileAlert" class="alert alert-success hidden"></div>
+                <form id="updateProfileForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="profileName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="profileEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="profilePhone">
+                    </div>
+                    <div class="form-group">
+                        <label>Farm Size (acres)</label>
+                        <input type="number" step="0.01" id="profileFarmSize">
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="profileLocation">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
+
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav" id="bottomNav" style="display: none;">
+            <a href="#" class="nav-item active" onclick="showPage('home'); return false;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('applications'); return false;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <span>Applications</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('newApplication'); return false;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                <span>New</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('profile'); return false;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Sample Data (In production, this would come from your PHP backend)
+        let currentUser = null;
+        let applications = [
+            {id: 1, type: 'NPK', quantity: 200, date: '2026-01-10', status: 'completed', notes: 'For wheat season'},
+            {id: 2, type: 'Urea', quantity: 150, date: '2026-01-12', status: 'delivered', notes: 'Urgent delivery needed'},
+            {id: 3, type: 'DAP', quantity: 100, date: '2026-01-15', status: 'approved', notes: 'For vegetable garden'},
+            {id: 4, type: 'Organic', quantity: 300, date: '2026-01-17', status: 'pending', notes: 'Organic farming section'}
+        ];
+
+        // Check if user is logged in
+        function checkAuth() {
+            currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('bottomNav').style.display = 'flex';
+                showPage('home');
+            }
+        }
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Demo login (in production, verify with backend)
+            if (email && password) {
+                currentUser = {
+                    id: 1,
+                    name: 'Jane Kamau',
+                    email: email,
+                    phone: '+254 712 345678',
+                    farmSize: 15.5,
+                    location: 'Kiambu County'
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                document.getElementById('bottomNav').style.display = 'flex';
+                showPage('home');
+                loadProfileData();
+                loadApplications();
+            }
+        });
+
+        // Register
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showAlert('registerAlert', 'Passwords do not match!', 'error');
+                return;
+            }
+
+            showAlert('registerAlert', 'Registration successful! You can now login.', 'success');
+            setTimeout(() => showPage('login'), 2000);
+        });
+
+        // New Application
+        document.getElementById('newApplicationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newApp = {
+                id: applications.length + 1,
+                type: document.getElementById('fertilizerType').value,
+                quantity: document.getElementById('quantity').value,
+                date: new Date().toISOString().split('T')[0],
+                status: 'pending',
+                notes: document.getElementById('notes').value
+            };
+            applications.unshift(newApp);
+            showAlert('newAppAlert', 'Application submitted successfully!', 'success');
+            this.reset();
+            loadApplications();
+            setTimeout(() => showPage('applications'), 2000);
+        });
+
+        // Update Profile
+        document.getElementById('updateProfileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            currentUser.name = document.getElementById('profileName').value;
+            currentUser.email = document.getElementById('profileEmail').value;
+            currentUser.phone = document.getElementById('profilePhone').value;
+            currentUser.farmSize = document.getElementById('profileFarmSize').value;
+            currentUser.location = document.getElementById('profileLocation').value;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showAlert('profileAlert', 'Profile updated successfully!', 'success');
+            loadProfileData();
+        });
+
+        // Load profile data
+        function loadProfileData() {
+            if (!currentUser) return;
+            
+            document.getElementById('profileInfo').innerHTML = `
+                <div class="info-row">
+                    <span class="info-label">Name</span>
+                    <span class="info-value">${currentUser.name}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">${currentUser.email}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Phone</span>
+                    <span class="info-value">${currentUser.phone}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Farm Size</span>
+                    <span class="info-value">${currentUser.farmSize} acres</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Location</span>
+                    <span class="info-value">${currentUser.location}</span>
+                </div>
+            `;
+
+            document.getElementById('profileName').value = currentUser.name;
+            document.getElementById('profileEmail').value = currentUser.email;
+            document.getElementById('profilePhone').value = currentUser.phone;
+            document.getElementById('profileFarmSize').value = currentUser.farmSize;
+            document.getElementById('profileLocation').value = currentUser.location;
+            document.getElementById('headerSubtitle').textContent = `Welcome, ${currentUser.name}`;
+        }
+
+        // Load applications
+        function loadApplications() {
+            const recentHTML = applications.slice(0, 3).map(app => createApplicationHTML(app)).join('');
+            const allHTML = applications.map(app => createApplicationHTML(app)).join('');
+            
+            document.getElementById('recentApplications').innerHTML = recentHTML || '<div class="empty-state">No applications yet</div>';
+            document.getElementById('allApplications').innerHTML = allHTML || '<div class="empty-state">No applications yet</div>';
+            
+            document.getElementById('totalApplications').textContent = applications.length;
+            document.getElementById('pendingApplications').textContent = applications.filter(a => a.status === 'pending').length;
+        }
+
+        function createApplicationHTML(app) {
+            return `
+                <div class="application-item">
+                    <h4>${app.type} - ${app.quantity} kg</h4>
+                    <p>📅 ${new Date(app.date).toLocaleDateString()}</p>
+                    <p>📝 ${app.notes}</p>
+                    <p><span class="status-badge status-${app.status}">${app.status}</span></p>
+                </div>
+            `;
+        }
+
+        // Show page
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById(pageName + 'Page').classList.add('active');
+            
+            const navItems = document.querySelectorAll('.nav-item');
+            if (pageName === 'home') navItems[0].classList.add('active');
+            else if (pageName === 'applications') navItems[1].classList.add('active');
+            else if (pageName === 'newApplication') navItems[2].classList.add('active');
+            else if (pageName === 'profile') navItems[3].classList.add('active');
+        }
+
+        function showAlert(id, message, type) {
+            const alert = document.getElementById(id);
+            alert.textContent = message;
+            alert.className = `alert alert-${type}`;
+            alert.classList.remove('hidden');
+            setTimeout(() => alert.classList.add('hidden'), 5000);
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            document.getElementById('bottomNav').style.display = 'none';
+            showPage('login');
+        }
+
+        // Initialize
+        checkAuth();
+        if (currentUser) {
+            loadProfileData();
+            loadApplications();
+        }
+
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
+
+<!-- manifest.json - App Configuration -->
+{
+  "name": "Smith - Fertilizer Management",
+  "short_name": "Smith",
+  "description": "Smith Fertilizer Application System",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#667eea",
+  "theme_color": "#667eea",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
+<!-- sw.js - Service Worker for Offline Support -->
+const CACHE_NAME = 'fertilizer-app-v1';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/manifest.json'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
+  );
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => response || fetch(event.request))
+  );
+});
+
+<!-- PHP API Integration (api.php) - Connect to your existing backend -->
+<?php
+// This file connects the mobile app to your existing PHP backend
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+
+require_once 'config.php';
+
+$action = $_GET['action'] ?? '';
+
+switch($action) {
+    case 'login':
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        
+        $stmt = $pdo->prepare("SELECT * FROM farmers WHERE email = ?");
+        $stmt->execute([$email]);
+        $farmer = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($farmer && password_verify($password, $farmer['password'])) {
+            unset($farmer['password']);
+            echo json_encode(['success' => true, 'user' => $farmer]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid credentials']);
+        }
+        break;
+        
+    case 'register':
+        $data = json_decode(file_get_contents('php://input'), true);
+        $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
+        
+        $stmt = $pdo->prepare("INSERT INTO farmers (full_name, email, phone, password, farm_size, location) VALUES (?, ?, ?, ?, ?, ?)");
+        
+        if ($stmt->execute([$data['name'], $data['email'], $data['phone'], $hashed_password, $data['farm_size'], $data['location']])) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Registration failed']);
+        }
+        break;
+        
+    case 'getApplications':
+        $farmer_id = $_GET['farmer_id'];
+        $stmt = $pdo->prepare("SELECT * FROM applications WHERE farmer_id = ? ORDER BY created_at DESC");
+        $stmt->execute([$farmer_id]);
+        echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+        break;
+        
+    case 'newApplication':
+        $data = json_decode(file_get_contents('php://input'), true);
+        $stmt = $pdo->prepare("INSERT INTO applications (farmer_id, fertilizer_type, quantity, application_date, notes) VALUES (?, ?, ?, NOW(), ?)");
+        
+        if ($stmt->execute([$data['farmer_id'], $data['type'], $data['quantity'], $data['notes']])) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false]);
+        }
+        break;
+        
+    case 'updateProfile':
+        $data = json_decode(file_get_contents('php://input'), true);
+        $stmt = $pdo->prepare("UPDATE farmers SET full_name = ?, email = ?, phone = ?,
