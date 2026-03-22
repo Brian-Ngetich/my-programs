@@ -1,72 +1,190 @@
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-    background: linear-gradient(to right, #006400, #000000);
-    margin: 0;
-    padding: 0;
+    background: black;
+    color: green;
+    line-height: 1.6;
 }
 
-.container {
-    width: 450px;
-    background: #ffffff;
-    margin: 50px auto;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-}
-
-h1 {
-    text-align: center;
-    color: #006400;
-    margin-bottom: 5px;
-}
-
-.subtitle {
-    text-align: center;
-    color: #555;
-    font-size: 14px;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    font-size: 14px;
-}
-
-input, select {
+header {
+    background: #111;
+    color: white;
+    position: fixed;
     width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 14px;
+    top: 0;
 }
 
-input:focus, select:focus {
-    border-color: #006400;
-    outline: none;
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+}
+
+.logo {
+    color: white;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li {
+    margin-left: 20px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 26px;
+    cursor: pointer;
+    color: white;
+}
+
+#darkModeToggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+/* HOME */
+
+.home {
+    height: 100vh;
+    background: url("mt2.jpeg") center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.home h1 {
+    font-size: 48px;
+}
+
+.home span {
+    color: #00c3ff;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 25px;
+    background: #00c3ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+
+/* SECTIONS */
+
+section {
+    padding: 100px 40px;
+    text-align: center;
+}
+
+
+/* PROJECTS */
+
+.projects-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.project-card {
+    background: white;
+    padding: 20px;
+    width: 250px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+/* CONTACT */
+
+form {
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+input,
+textarea {
+    margin: 10px 0;
+    padding: 10px;
 }
 
 button {
-    width: 100%;
-    padding: 12px;
-    background: #006400;
-    color: #ffffff;
+    padding: 10px;
+    background: #00c3ff;
     border: none;
-    border-radius: 5px;
-    font-size: 16px;
+    color: white;
     cursor: pointer;
-    margin-top: 10px;
 }
 
-button:hover {
-    background: #004d00;
+
+/* FOOTER */
+
+footer {
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+
+/* DARK MODE */
+
+.dark-mode {
+    background: #121212;
+    color: white;
+}
+
+.dark-mode .project-card {
+    background: #1f1f1f;
+    color: white;
+}
+
+
+/* MOBILE */
+
+@media(max-width:768px) {
+    .nav-links {
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background: #111;
+        flex-direction: column;
+        width: 200px;
+        display: none;
+    }
+    .nav-links li {
+        margin: 15px;
+    }
+    .nav-links.active {
+        display: flex;
+    }
+    .menu-toggle {
+        display: block;
+    }
 }
